@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سوق التلفونات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="dot"></span> سوق التلفونات</div>
+  <button class="navbtn" id="toggleAdmin">لوحة التحكم</button>
+</header>
+
+<div id="storeView">
+  <div class="tabs" id="catTabs"></div>
+  <main>
+    <div class="grid" id="productGrid"></div>
+  </main>
+  <div class="footerNote">الأسعار والتوفر قابلة للتحديث من إدارة المحل في أي وقت</div>
+</div>
+
+<div id="adminView" class="adminwrap">
+  <main>
+    <div id="adminLogin" class="loginbox">
+      <div style="font-weight:900;font-size:1.1rem">دخول لوحة التحكم</div>
+      <input type="password" id="adminPass" placeholder="كلمة السر">
+      <button id="adminLoginBtn">دخول</button>
+      <div class="msg err" id="loginErr" style="display:none">كلمة السر غلط</div>
+    </div>
+
+    <div id="adminPanel" style="display:none">
+      <div class="tabs" style="padding:0;margin-bottom:16px">
+        <button class="tab active" data-atab="products">المنتجات</button>
+        <button class="tab" data-atab="orders">الطلبات <span id="orderBadge"></span></button>
+      </div>
+
+      <div id="aProducts">
+        <div class="adminform">
+          <h4>إضافة منتج / خدمة جديدة</h4>
+          <div class="rowgrid">
+            <input type="text" id="npName" placeholder="اسم المنتج">
+            <select id="npCat">
+              <option value="تلفونات جديدة">تلفونات جديدة</option>
+              <option value="تلفونات مستعملة">تلفونات مستعملة</option>
+              <option value="جرابات">جرابات</option>
+              <option value="شواحن">شواحن</option>
+              <option value="سماعات">سماعات</option>
+              <option value="ساعات ذكية">ساعات ذكية</option>
+              <option value="اكسسوارات كمبيوتر ولابتوب">اكسسوارات كمبيوتر ولابتوب</option>
+            </select>
+            <select id="npCond">
+              <option value="new">جديد</option>
+              <option value="used">مستعمل</option>
+              <option value="refurb">تجديد</option>
+            </select>
+            <input type="text" id="npPrice" placeholder="السعر (جنيه)">
+          </div>
+          <div class="field"><textarea id="npDesc" placeholder="وصف مختصر"></textarea></div>
+          <div class="field">
+            <div class="uploadbox" id="npImageBox">
+              اضغط لإضافة صورة المنتج (اختياري)
+              <input type="file" id="npImage" accept="image/*" style="display:none">
+              <div id="npImagePreview"></div>
+            </div>
+          </div>
+
+          <button class="addbtn" id="addProductBtn">إضافة المنتج</button>
+          <div class="msg err" id="addErr"></div>
+        </div>
+
+        <table>
+          <thead><tr><th>الصورة</th><th>المنتج</th><th>الفئة</th><th>السعر</th><th>الحالة</th><th></th></tr></thead>
+          <tbody id="adminProductsBody"></tbody>
+        </table>
+      </div>
+
+      <div id="aOrders" style="display:none">
+        <table class="orders">
+          <thead>
+            <tr>
+              <th>الوقت</th>
+              <th>المنتج</th>
+              <th>العميل</th>
+              <th>التليفون</th>
+              <th>تليفون بديل</th>
+              <th>المحافظة</th>
+              <th>المدينة</th>
+              <th>العنوان</th>
+              <th>الدفع</th>
+              <th>الإيصال</th>
+              <th>الحالة</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="adminOrdersBody"></tbody>
+        </table>
+        <div class="empty" id="ordersEmpty" style="display:none">لسه مفيش طلبات</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="sitefooter">
+  <div class="fbrand"><span class="dot"></span> سوق التلفونات</div>
+ 
+  <div>جميع الحقوق محفوظة © <span id="year"></span> سوق التلفونات</div>
+ 
+  <div class="fdev">تصميم وتطوير: <a href="https://mazen-khaled.vercel.app"><strong>Mazen Khaled</strong></a>
+  
+  </div>
+</footer>
+
+<div class="overlay" id="orderOverlay">
+  <div class="modal">
+    <button class="closebtn" id="closeOrder">×</button>
+    <h3 id="omProductName"></h3>
+    <div class="pprice" id="omProductPrice"></div>
+
+    <div class="field"><label>الاسم رباعي</label><input type="text" id="ofName"></div>
+    <div class="field"><label>رقم التليفون</label><input type="tel" id="ofPhone"></div>
+    <div class="field"><label>رقم تليفون بديل</label><input type="tel" id="ofAltPhone"></div>
+
+    <div class="field">
+      <label>المحافظة</label>
+      <select id="ofGov">
+        <option value="">اختار المحافظة</option>
+      </select>
+    </div>
+
+    <div class="field"><label>المدينة / المركز</label><input type="text" id="ofCity" placeholder="مثال: مدينة نصر"></div>
+
+    <div class="field"><label>العنوان بالتفصيل</label><textarea id="ofAddress" placeholder="اسم الشارع ورقم العمارة والدور والعلامة المميزة"></textarea></div>
+
+    <div class="field">
+      <label>طريقة الدفع</label>
+      <div class="paymethods">
+        <div class="paymethod" data-pay="instapay">
+          <div class="paylogo ig">InstaPay</div>
+          <div style="font-size:.8rem">إنستاباي</div>
+        </div>
+        <div class="paymethod" data-pay="vodafone">
+          <div class="paylogo vf">Vodafone Cash</div>
+          <div style="font-size:.8rem">فودافون كاش</div>
+        </div>
+      </div>
+
+      <div class="payinfo" id="payInfo" style="display:none">
+        <div class="payinfo-label" id="payInfoLabel"></div>
+        <div class="payinfo-row">
+          <span class="payinfo-num" id="payInfoNumber"></span>
+          <button type="button" class="copybtn" id="copyPayNumber">نسخ</button>
+        </div>
+        <div class="payinfo-owner" id="payInfoOwner"></div>
+        <div class="payinfo-hint">حوّل قيمة الطلب على الرقم ده وارفع صورة الإيصال تحت</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>صورة إيصال التحويل</label>
+      <div class="uploadbox" id="uploadBox">
+        اضغط لرفع صورة الإيصال
+        <input type="file" id="ofReceipt" accept="image/*" style="display:none">
+        <div id="receiptPreviewWrap"></div>
+      </div>
+    </div>
+
+    <div class="note">في حالة عدم استلام الطلب عند وصوله، يحق للمحل خصم نسبة من قيمة الطلب مقابل مصاريف الشحن والتحصيل.</div>
+
+    <label class="agree">
+      <input type="checkbox" id="ofAgree">
+      <span>موافق على شروط الطلب وطريقة الدفع المذكورة أعلاه</span>
+    </label>
+
+    <button class="submitbtn" id="submitOrderBtn">تأكيد الطلب</button>
+    <div class="msg" id="orderMsg"></div>
+  </div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
